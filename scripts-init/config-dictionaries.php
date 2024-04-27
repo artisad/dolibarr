@@ -1,4 +1,10 @@
 <?php
+/*
+	THIS SCRIPT DISABLE ALL THE COUNTRY-RELATED OBJECTS IN DICTIONARIES ("WHERE COLUMN_NAME IN ("fk_pays", "active");
+ 	AND ENABLE ONLY THOSE OF MAIN COMPANY COUNTRY
+*/
+
+
 
 require_once '../htdocs/master.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
@@ -38,6 +44,7 @@ if ($result)
     $db->query($sql);
 
     // Pass all values of current country to active at 1
+    $country_id  = $mysoc->country_id ? $mysoc->country_id : 1;
     $sql = "UPDATE $table_name SET active = 1 WHERE fk_pays = ".$mysoc->country_id;
     $db->query($sql);
 		$i++;
