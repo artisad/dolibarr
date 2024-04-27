@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+    dolidb:
+        image: mariadb:latest
+        container_name: dolidb
+        user: dbuser
+        restart: unless-stopped
+        environment:
+            MARIADB_ROOT_PASSWORD: rootpassword
+            MARIADB_DATABASE: dolibarr
+            MARIADB_USER: dolibarr
+            MARIADB_PASSWORD: userpassword
+        networks:
+            - dbnet
+        volumes:
+            - /<path_dolibarr>/db:/var/lib/mysql
+        
+
+    web:
+        image: tuxgasy/dolibarr:latest # 19.0.1 as of now
+        container_name: doliapp
+        restart: unless-stopped
+        environment:
+            DOLI_COMPANY_NAME: Company
+            DOLI_COMPANY_COUNTRYCODE: FR
+
+            DOLI_ENABLE_MODULES: "Societe,Facture,Stock,Propale"
+            DOLI_DB_HOST: dolidb
+            DOLI_DB_USER: dolibarr
+            DOLI_DB_PASSWORD: userpassword
+            DOLI_DB_NAME: dolibarr
+            DOLI_URL_ROOT: 'https://doliurl'
+            PHP_INI_DATE_TIMEZONE: 'Europe/Paris'
+            PHP_INI_UPLOAD_MAX_FILESIZE: "10M"
+            PHP_INI_POST_MAX_SIZE: "50M"
+            #WWW_USER: www-data
+            #WWW_GROUP: www-data
+        depends_on:
+            - dolidb
+        volumes: 
+            - /<path_dolibarr>/docs:/var/www/documents
+            - /<commons_dolibarr>/scripts-init/docker-init.php:/var/www/scripts/docker-init.php
+            - /<commons_dolibarr>/scripts-init:/var/www/scripts/custom
+        networks: 
+            - web
+            - dbnet
+
+    pma:
+        image: phpmyadmin/phpmyadmin
+        container_name: dolipma
+        depends_on:
+            - dolidb
+        environment:
+           - PMA_HOST=dolidb
+           - PMA_PORT=3306
+           - PMA_ARBITRARY=1
+        restart: "no"
+        networks: 
+           - dbnet
+           - web
+
+networks:
+    dbnet:
+        name: dolidb_net
+        ipam:
+            config:
+                - subnet: 172.xx.xx.(xx%8)/29
+    web:
+        name: web
+        external: true
+
+            
