@@ -40,7 +40,7 @@ services:
             - dolidb
         volumes: 
             - /<path_dolibarr>/docs:/var/www/documents
-            - /<commons_dolibarr>/scripts-init/docker-init.php:/var/www/scripts/docker-init.php
+            - /<commons_dolibarr>/scripts-init/php/docker-init.php:/var/www/scripts/docker-init.php
             - /<commons_dolibarr>/scripts-init:/var/www/scripts/custom
         networks: 
             - web
