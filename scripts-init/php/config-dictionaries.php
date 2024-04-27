@@ -33,7 +33,7 @@ if ($result)
 	while ($i < $num)
 	{
     $obj = $db->fetch_object($result);
-		$tablename = $obj->table_name;
+		$table_name = $obj->table_name;
 
     // ALTER table to default value for active at 0
     $sql = "ALTER TABLE ".$table_name." MODIFY COLUMN active TINYINT(1) DEFAULT 0";
