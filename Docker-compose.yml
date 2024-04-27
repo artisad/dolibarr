@@ -40,8 +40,8 @@ services:
             - dolidb
         volumes: 
             - /<path_dolibarr>/docs:/var/www/documents
-            - /<commons_dolibarr>/scripts-init/php/docker-init.php:/var/www/scripts/docker-init.php
-            - /<commons_dolibarr>/scripts-init:/var/www/scripts/custom
+            - /<commons_dolibarr>/scripts-init.d/docker-init.php:/var/www/scripts/docker-init.php
+            - /<commons_dolibarr>/scripts-init.d:/var/www/scripts/docker-init.d
         networks: 
             - web
             - dbnet
